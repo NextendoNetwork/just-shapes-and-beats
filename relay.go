@@ -51,6 +51,16 @@ func startRelayWatcher() {
 			if net.ParseIP(host) == nil {
 				host = ""
 			}
+			// Volcado de los datagramas relayados, solo mientras exista /app/relay_dump_on.
+			// Mide el intercambio P2P Pia que el servidor no ve (2618-0502/0513, 2026-10-06).
+			if _, err := os.Stat("/app/relay_dump_on"); err == nil {
+				if nex.RelayDumpPath == "" {
+					fmt.Println("[JSAB relay] volcado de paquetes ACTIVO -> /tmp/relay_dump.log (dentro del contenedor; /app es de solo lectura)")
+				}
+				nex.RelayDumpPath = "/tmp/relay_dump.log"
+			} else {
+				nex.RelayDumpPath = ""
+			}
 			allowBytes, _ := os.ReadFile("/app/relay_allow")
 			state := host + "|" + string(allowBytes)
 			if state != previous {

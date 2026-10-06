@@ -74,13 +74,38 @@ func main() {
 	authServer := nex.NewServer(authEndpoint)
 
 	// --- Secure server (:60024) ---
-	secureEndpoint := nex.NewEndpoint(settings)
+	// Le serveur securise a SES PROPRES reglages, avec la version mineure PRUDP 0 dans son
+	// SYN-ACK, comme SMM2 et SSBU dont le P2P Pia fonctionne. Il partageait ceux de l'Auth
+	// (mineure 5) ; c'est la difference de configuration avec ces deux titres la plus proche
+	// de la session dont Pia depend. Hypothese pour le 2618-0513 du visiteur, a mesurer.
+	secureSettings := nex.NewSwitchSettings(accessKey, nexVersion)
+	secureSettings.PrudpMinorVersion = 0
+	secureEndpoint := nex.NewEndpoint(secureSettings)
 	secureEndpoint.SetSecureAccount(securePassword, securePID)
+	// La consola ve su NSA como PID, como en SMM2 (ver identidad.go). Los dos servidores: la
+	// respuesta del Auth y el CONNECT del seguro deben hablar la misma identidad.
+	instalarIdentidad(settings, secureSettings)
 	startRelayWatcher()
 
 	mm := nex.NewMatchmaking()
 	mm.UseReportedUDPPort = true
-	secureEndpoint.Register(nex.ProtocolSecureConnection, nex.SecureConnectionHandler())
+	// Misma generacion de Pia que Strikers (que si juega partidas completas en Nextendo) :
+	// sin esto el visitante abandona al anfitrion justo despues de un hole-punch correcto,
+	// salvo que las URLs de sesion lleven el endpoint que la consola registro. Copiado de
+	// mario-strikers/main.go (2026-10-06).
+	mm.PreservePiaStationIdentity = true
+	mm.PublicStationFirst = false
+	mm.JoinRespExistingCount = true
+	mm.SessionPartPersists = true
+	// GetRelaySignatureKey : chaine vide en longueur 0 et VRAI identifiant de serveur de jeu.
+	// Hypothese pour le 2618-0513/0502 du visiteur (voir nextendo-nex/nattraversal.go).
+	nex.RelaySigChaineVideZero = true
+	nex.RelaySigGameServerID = 0x2a699600
+	scCfg := nex.SwitchPia519Config()
+	scCfg.PreservePiaStationIdentity = true
+	secureEndpoint.Register(nex.ProtocolSecureConnection, nex.SecureConnectionHandlerWithConfig(scCfg))
+	// Keepalive tipo 8 de Pia, como Strikers, SMM2 y SSBU.
+	setupPiaType8Keepalive(secureEndpoint)
 	secureEndpoint.Register(nex.ProtocolMatchmakeExtension, mm.ExtensionHandler())
 	secureEndpoint.Register(nex.ProtocolMatchMaking, mm.MatchMakingHandler())
 	secureEndpoint.Register(nex.ProtocolMatchMakingExt, mm.MatchMakingExtHandler())
