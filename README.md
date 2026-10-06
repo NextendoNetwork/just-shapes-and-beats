@@ -1,0 +1,25 @@
+# Just Shapes & Beats on Nextendo
+
+Original NEX matchmaking service for Just Shapes & Beats. The game uses Pia for
+peer-to-peer play; this server provides authentication, session discovery and NAT
+traversal. It does not relay traffic to another game's live service.
+
+The game's measured server ID is `0x2a699600`, and the access key
+`1b2ee2f7` was verified against a captured PRUDP CONNECT signature. The code
+targets NEX 4.6.5. Multiplayer behavior still needs a console test; unknown RMC
+methods are logged by protocol and method number.
+
+Run on the VPS with `deploy-vps.sh` after placing the compiled `jsab-server` in
+`/home/juan/jsab/`. The script checks that its ports and container name are free.
+The auth host is routed through Traefik; secure traffic uses TCP port 60024.
+The dashboard is available only on the Docker `coolify` network at
+`http://jsab:8113/api/stats`.
+
+Build on Juan's computer with limited resources:
+
+```sh
+GOFLAGS=-p=4 GOMAXPROCS=4 GOMEMLIMIT=2GiB go build -o /home/juanjo/Nextendo/just-shapes-and-beats/jsab-server ./...
+```
+
+The service uses Nextendo's own NEX code and is licensed under PolyForm Shield
+1.0.0; see `LICENSE.md`.
