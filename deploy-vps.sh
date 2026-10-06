@@ -22,7 +22,7 @@ fi
 docker run -d \
     --name jsab \
     --network coolify \
-    --memory 512m \
+    --memory 128m \
     --restart unless-stopped \
     -p 60024:60024 \
     -v /home/juan/jsab:/app:ro \
