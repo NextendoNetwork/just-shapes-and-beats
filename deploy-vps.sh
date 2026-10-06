@@ -4,11 +4,13 @@ set -eu
 binary=/home/juan/jsab/jsab-server
 cert_dir=/opt/jsab-decouverte
 secret_file=/opt/pac99-nextendo/nextendo_secret.key
+nat_dir=/opt/mk8nex-nat
 
 test -x "$binary"
 test -r "$cert_dir/cert.pem"
 test -e "$cert_dir/key.pem"
 test -e "$secret_file"
+test -r "$nat_dir/nat_endpoints.txt"
 dash_token=$(docker inspect pac99nex --format '{{range .Config.Env}}{{println .}}{{end}}' | sed -n 's/^DASH_TOKEN=//p')
 test -n "$dash_token"
 
@@ -32,6 +34,7 @@ docker run -d \
     -v "$cert_dir/cert.pem:/data/cert.pem:ro" \
     -v "$cert_dir/key.pem:/data/key.pem:ro" \
     -v "$secret_file:/data/nextendo_secret.key:ro" \
+    -v "$nat_dir:/nat:ro" \
     -e AUTH_PORT=443 \
     -e SECURE_PORT=60024 \
     -e DASH_PORT=8113 \
@@ -41,6 +44,7 @@ docker run -d \
     -e NEXTENDO_REQUIRE_ACCOUNT=1 \
     -e NEXTENDO_REQUIRE_SIGNED_TOKEN=1 \
     -e NEXTENDO_SECRET_FILE=/data/nextendo_secret.key \
+    -e NNCS_NAT_FILE=/nat/nat_endpoints.txt \
     -e CERT_FILE=/data/cert.pem \
     -e KEY_FILE=/data/key.pem \
     -l traefik.enable=true \
