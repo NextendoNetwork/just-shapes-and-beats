@@ -530,6 +530,14 @@ func startDashboard(endpoint *nex.Endpoint, mm *nex.Matchmaking) {
 		w.Header().Set("Cache-Control", "no-store")
 		_ = json.NewEncoder(w).Encode(buildStats(endpoint, mm))
 	})
+	mux.HandleFunc("/api/relay", func(w http.ResponseWriter, r *http.Request) {
+		if !authed(w, r) {
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Cache-Control", "no-store")
+		_ = json.NewEncoder(w).Encode(nex.PairRelayStats())
+	})
 	// /api/kick — libère un compte resté coincé derrière une connexion morte, sans
 	// redémarrer le serveur (ce qui déconnecterait tous les joueurs en partie).
 	//   ?pid=<PID>     déconnecte toutes les connexions de ce compte
