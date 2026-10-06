@@ -19,6 +19,12 @@ Creating a host lobby succeeds; no second player has completed a join. Do not
 list JSAB as playable until a multiplayer match starts. Unknown RMC methods
 are logged by protocol and method number.
 
+The JSAB binary contains Pia jobs for relay negotiation
+(`PrepareNatTraversalByRelay`, `SendRelayConnectionRequest`, and
+`RelayRouteManageJob`). The current pair relay only forwards UDP; the NEX
+`GetRelaySignatureKey` handler advertises no relay. Its packet forwarding
+therefore does not prove that JSAB's Pia has accepted a relay connection.
+
 Run on the VPS with `deploy-vps.sh` after placing the compiled `jsab-server` in
 `/home/juan/jsab/`. The script checks that its ports and container name are free.
 The auth host is routed through Traefik; secure traffic uses TCP port 60024.
