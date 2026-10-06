@@ -12,13 +12,17 @@ players and forwarded packets in both directions without resolving that error.
 The secure station was corrected from `prudp` to `prudps`, and ticketed secure
 CONNECTs are confirmed. A direct-connection test still failed because the host's
 public station carried its TCP port instead of the UDP port in `ReplaceURL`.
-The per-title UDP-port fallback is now deployed for a new console test. Do not
+The per-title UDP-port fallback was also tested. The service now mounts the
+same NNCS observation file as the working SMM2 and SSBU servers. Both sources
+produced a UDP port for GetSessionURLs, but joining still returned 2618-0513.
+Creating a host lobby succeeds; no second player has completed a join. Do not
 list JSAB as playable until a multiplayer match starts. Unknown RMC methods
 are logged by protocol and method number.
 
 Run on the VPS with `deploy-vps.sh` after placing the compiled `jsab-server` in
 `/home/juan/jsab/`. The script checks that its ports and container name are free.
 The auth host is routed through Traefik; secure traffic uses TCP port 60024.
+The deployment mounts `/opt/mk8nex-nat` read-only for NNCS UDP observations.
 The dashboard is available only on the Docker `coolify` network at
 `http://jsab:8113/api/stats`.
 
