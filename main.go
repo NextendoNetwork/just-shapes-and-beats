@@ -76,6 +76,7 @@ func main() {
 	// --- Secure server (:60024) ---
 	secureEndpoint := nex.NewEndpoint(settings)
 	secureEndpoint.SetSecureAccount(securePassword, securePID)
+	startRelayWatcher()
 
 	mm := nex.NewMatchmaking()
 	secureEndpoint.Register(nex.ProtocolSecureConnection, nex.SecureConnectionHandler())

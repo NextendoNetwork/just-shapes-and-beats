@@ -15,6 +15,14 @@ The auth host is routed through Traefik; secure traffic uses TCP port 60024.
 The dashboard is available only on the Docker `coolify` network at
 `http://jsab:8113/api/stats`.
 
+Direct Pia connections can fail for some NAT combinations. The UDP relay is
+off by default. To test one measured pair, write the VPS public IP to
+`/home/juan/jsab/relay_on` and both internal Nextendo PIDs, one per line, to
+`/home/juan/jsab/relay_allow`. Prefix a PID with `!` to force relay for a
+test pair without waiting for two direct failures. Both files are reloaded
+every two seconds. Remove `relay_on` to turn the relay off. Only ports
+39000–39015/UDP are exposed for this service.
+
 Build on Juan's computer with limited resources:
 
 ```sh

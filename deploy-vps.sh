@@ -27,6 +27,7 @@ docker run -d \
     --memory 128m \
     --restart unless-stopped \
     -p 60024:60024 \
+    -p 39000-39015:39000-39015/udp \
     -v /home/juan/jsab:/app:ro \
     -v "$cert_dir/cert.pem:/data/cert.pem:ro" \
     -v "$cert_dir/key.pem:/data/key.pem:ro" \
