@@ -50,7 +50,7 @@ func main() {
 	settings := nex.NewSwitchSettings(accessKey, nexVersion)
 
 	// --- Auth server (insecure, :443) ---
-	secureURL := nex.NewStationURL("prudp")
+	secureURL := nex.NewStationURL("prudps")
 	secureURL.Set("address", nextendoHost)
 	secureURL.SetInt("port", securePort)
 	secureURL.SetInt("CID", 1)
