@@ -8,11 +8,13 @@ The game's measured server ID is `0x2a699600`, and the access key
 `1b2ee2f7` was verified against a captured PRUDP CONNECT signature. The code
 targets NEX 4.6.5. Console tests confirmed public matchmaking, but joining a
 second player returned 2618-0513. An opt-in relay received traffic from both
-players and forwarded 104 of 124 packets without resolving that error. The
-secure station was then corrected from `prudp` to `prudps` so the client can
-present its ticket; that change still needs a console test. Do not list JSAB
-as playable until a multiplayer match starts. Unknown RMC methods are logged
-by protocol and method number.
+players and forwarded packets in both directions without resolving that error.
+The secure station was corrected from `prudp` to `prudps`, and ticketed secure
+CONNECTs are confirmed. A direct-connection test still failed because the host's
+public station carried its TCP port instead of the UDP port in `ReplaceURL`.
+The per-title UDP-port fallback is now deployed for a new console test. Do not
+list JSAB as playable until a multiplayer match starts. Unknown RMC methods
+are logged by protocol and method number.
 
 Run on the VPS with `deploy-vps.sh` after placing the compiled `jsab-server` in
 `/home/juan/jsab/`. The script checks that its ports and container name are free.
