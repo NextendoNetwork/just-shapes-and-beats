@@ -9,6 +9,8 @@ test -x "$binary"
 test -r "$cert_dir/cert.pem"
 test -e "$cert_dir/key.pem"
 test -e "$secret_file"
+dash_token=$(docker inspect pac99nex --format '{{range .Config.Env}}{{println .}}{{end}}' | sed -n 's/^DASH_TOKEN=//p')
+test -n "$dash_token"
 
 if docker container inspect jsab >/dev/null 2>&1; then
     echo 'Container jsab already exists; inspect it before replacing it.' >&2
@@ -32,6 +34,7 @@ docker run -d \
     -e AUTH_PORT=443 \
     -e SECURE_PORT=60024 \
     -e DASH_PORT=8113 \
+    -e DASH_TOKEN="$dash_token" \
     -e NEXTENDO_PROXY_PROTOCOL=1 \
     -e NEXTENDO_HOST=g2a699600-lp1.s.n.srv.nintendo.net \
     -e NEXTENDO_REQUIRE_ACCOUNT=1 \
