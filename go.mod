@@ -9,4 +9,4 @@ require (
 	github.com/lxzan/gws v1.10.0 // indirect
 )
 
-replace github.com/NextendoNetwork/nextendo-nex => /home/juanjo/Nextendo/nextendo-nex
+replace github.com/NextendoNetwork/nextendo-nex => ../nextendo-nex

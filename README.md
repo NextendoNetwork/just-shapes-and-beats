@@ -43,7 +43,7 @@ every two seconds. Remove `relay_on` to turn the relay off. Only ports
 Build on Juan's computer with limited resources:
 
 ```sh
-GOFLAGS=-p=4 GOMAXPROCS=4 GOMEMLIMIT=2GiB go build -o /home/juanjo/Nextendo/just-shapes-and-beats/jsab-server ./...
+GOFLAGS=-p=4 GOMAXPROCS=4 GOMEMLIMIT=2GiB go build -o ./jsab-server ./...
 ```
 
 The service uses Nextendo's own NEX code and is licensed under PolyForm Shield
