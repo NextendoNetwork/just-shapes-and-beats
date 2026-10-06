@@ -79,6 +79,7 @@ func main() {
 	startRelayWatcher()
 
 	mm := nex.NewMatchmaking()
+	mm.UseReportedUDPPort = true
 	secureEndpoint.Register(nex.ProtocolSecureConnection, nex.SecureConnectionHandler())
 	secureEndpoint.Register(nex.ProtocolMatchmakeExtension, mm.ExtensionHandler())
 	secureEndpoint.Register(nex.ProtocolMatchMaking, mm.MatchMakingHandler())
