@@ -6,24 +6,24 @@ traversal. It does not relay traffic to another game's live service.
 
 The game's measured server ID is `0x2a699600`, and the access key
 `1b2ee2f7` was verified against a captured PRUDP CONNECT signature. The code
-targets NEX 4.6.5. Console tests confirmed public matchmaking, but joining a
-second player returned 2618-0513. An opt-in relay received traffic from both
-players and forwarded packets in both directions without resolving that error.
-The secure station was corrected from `prudp` to `prudps`, and ticketed secure
-CONNECTs are confirmed. A direct-connection test still failed because the host's
-public station carried its TCP port instead of the UDP port in `ReplaceURL`.
-The per-title UDP-port fallback was also tested. The service now mounts the
-same NNCS observation file as the working SMM2 and SSBU servers. Both sources
-produced a UDP port for GetSessionURLs, but joining still returned 2618-0513.
-Creating a host lobby succeeds; no second player has completed a join. Do not
-list JSAB as playable until a multiplayer match starts. Unknown RMC methods
-are logged by protocol and method number.
+targets NEX 4.6.5. Juan confirmed a complete multiplayer game between two
+consoles on 2026-10-06. A player on another network then joined a session with
+successful direct Pia traversal. Public matchmaking and online multiplayer are
+deployed; unknown RMC methods remain logged by protocol and method number.
+
+The decisive fix was matching the station identity and join response settings
+used by Mario Strikers' newer Pia: `PreservePiaStationIdentity`,
+`JoinRespExistingCount`, `SessionPartPersists`, and the type-8 keepalive. Before
+that, consoles found the same lobby and could complete NAT traversal but left
+the Pia session. The secure station also uses `prudps`, and the deployment
+mounts the same NNCS observation file as SMM2 and SSBU.
 
 The JSAB binary contains Pia jobs for relay negotiation
 (`PrepareNatTraversalByRelay`, `SendRelayConnectionRequest`, and
 `RelayRouteManageJob`). The current pair relay only forwards UDP; the NEX
 `GetRelaySignatureKey` handler advertises no relay. Its packet forwarding
-therefore does not prove that JSAB's Pia has accepted a relay connection.
+therefore does not prove that JSAB's Pia has accepted a relay connection. The
+successful console tests used direct Pia traversal with this relay off.
 
 Run on the VPS with `deploy-vps.sh` after placing the compiled `jsab-server` in
 `/home/juan/jsab/`. The script checks that its ports and container name are free.
